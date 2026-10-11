@@ -88,10 +88,13 @@ with HandLandmarker.create_from_options(options) as landmarker:
             height, width = frame.shape[:2] # [:2] means we only want the first two values of the shape tuple, which are height and width.
             for hand in latest_result.hand_landmarks:
                 # landmarks are between 0 and 1, so scale them to pixel positions
+                # recover the pixel coordinates of the hand landmarks by multiplying the normalized coordinates (between 0 and 1).
                 points = [(int(lm.x * width), int(lm.y * height)) for lm in hand]
                 # create a line between the start and end points of each connection in HAND_CONNECTIONS, using the corresponding pixel coordinates from points.
                 # The line is drawn in green with a thickness of 2 pixels.
+                # for start, end in HAND_CONNECTIONS [0:12]: # Use this line if you want to draw only the first 12 connections (the thumb and index finger)
                 for start, end in HAND_CONNECTIONS:
+                    # in FRAME, itrate through the HAND_CONNECTIONS list, use the [0] and [1] to get the start and end points of each connection.
                     cv2.line(frame, points[start], points[end], (0, 255, 0), 2)
                 for point in points:
                     cv2.circle(frame, point, 4, (0, 0, 255), -1)
